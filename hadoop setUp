@@ -1,0 +1,197 @@
+#java
+export JAVA_HOME=/home/ubuntu/java/jdk1.8.0_201
+export PATH=$JAVA_HOME/bin:$PATH
+
+----------------------------------
+
+source ~/.bashrc
+---------------------------
+
+
+192.168.75.130 mpi-1
+192.168.75.131 mpi-2
+
+
+
+
+==============SSH==================
+1.在Master机下生成公钥/私钥对。
+ssh-keygen -t rsa                    # /home/root/.ssh    生成公钥 私钥
+
+
+scp id_rsa.pub root@mpi-1:~/.ssh/id_rsa.pub_s1
+
+
+
+
+scp authorized_keys root@mpi-2:~/.ssh/
+
+
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/authorized_keys
+
+-----------------------------=====hadoop======================
+#hadoop
+export HADOOP_HOME=/home/ubuntu/hadoop/hadoop-3.0.2
+export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
+------------------------------------------------------
+
+
+export JAVA_HOME=/home/ubuntu/java/jdk1.8.0_201
+
+
+---------------------------------------
+
+
+<property>
+                <name>fs.defaultFS</name>
+                <value>hdfs://mpi-1:9000</value>
+        <description>HDFS的URI，文件系统://namenode标识:端口号</description>
+        </property>
+        <property>
+                <name>hadoop.tmp.dir</name>
+                <value>/home/ubuntu/hadoop/tmp</value>
+        <description>namenode上本地的hadoop临时文件夹</description>
+        </property>
+        <property>
+                <name>io.file.buffer.size</name>
+                <value>131072</value>
+        <description>Size of read/write buffer used in SequenceFiles</description>
+</property>
+
+
+---------------------------------------
+<property>
+                <name>dfs.replication</name>
+                <value>1</value>
+        <description>Hadoop的备份系数是指每个block在hadoop集群中有几份，系数越高，冗余性越好，占用存储也越多</description>
+        </property>
+        <property>
+                <name>dfs.namenode.name.dir</name>
+                <value>file:///home/ubuntu/hadoop/dfs/name</value>
+        <description>namenode上存储hdfs名字空间元数据 </description>
+        </property>
+        <property>
+                <name>dfs.datanode.data.dir</name>
+                <value>file:///home/ubuntu/hadoop/dfs/data</value>
+        <description>datanode上数据块的物理存储位置</description>
+        </property>
+        <property>
+                <name>dfs.namenode.secondary.http-address</name>
+                <value>mpi-1:50090</value>
+        </property>
+        <property>
+                <name>dfs.webhdfs.enabled</name>
+                <value>true</value>
+        </property>
+        <property>
+                <name>dfs.permissions</name>
+                <value>false</value>
+        <description>dfs.permissions配置为false后，可以允许不要检查权限就生成dfs上的文件，方便倒是方便了，但是你需要防止误删除，请将它设置为true，或者直接将该property节点删除，因为默认就是true</description>
+        </property>
+		
+		
+		
+		--------------------------------------------
+		
+		<property>
+                <name>mapreduce.framework.name</name>
+                <value>yarn</value>
+        <description>The runtime framework for executing MapReduce jobs. Can be one of local, classic or yarn.</description>
+            <final>true</final>
+        </property>
+        <property>
+                <name>mapreduce.jobtracker.http.address</name>
+                <value>mpi-1:50030</value>
+        </property>
+        <property>
+                <name>mapreduce.jobhistory.address</name>
+                <value>mpi-1:10020</value>
+        </property>
+        <property>
+                <name>mapreduce.jobhistory.webapp.address</name>
+                <value>mpi-1:19888</value>
+        </property>
+        <property>
+                <name>mapred.job.tracker</name>
+                <value>http://mpi-1:9001</value>
+        </property>
+---------------------------------------------------------------
+
+<property>
+                <name>yarn.resourcemanager.hostname</name>
+                <value>mpi-1</value>
+        <description>The hostname of the RM.</description>
+        </property>
+        <property>
+                <name>yarn.nodemanager.aux-services</name>
+                <value>mapreduce_shuffle</value>
+        </property>
+        <property>
+                <name>yarn.resourcemanager.address</name>
+                <value>mpi-1:8032</value>
+        <description>${yarn.resourcemanager.hostname}:8032</description>
+        </property>
+        <property>
+                <name>yarn.resourcemanager.scheduler.address</name>
+                <value>mpi-1:8030</value>
+        </property>
+        <property>
+                <name>yarn.resourcemanager.resource-tracker.address</name>
+                <value>mpi-1:8031</value>
+        </property>
+        <property>
+                <name>yarn.resourcemanager.admin.address</name>
+                <value>mpi-1:8033</value>
+        </property>
+        <property>
+                <name>yarn.resourcemanager.webapp.address</name>
+                <value>mpi-1:8088</value>
+        </property>
+--------------------- 
+
+
+
+
+
+
+<property>
+                <name>fs.defaultFS</name>
+                <value>hdfs://mpi-1:9000</value>
+        <description>HDFS的URI，文件系统://namenode标识:端口号</description>
+        </property>
+        <property>
+                <name>hadoop.tmp.dir</name>
+                <value>/tmp/hadoop-${user.name}</value> 
+        <description>namenode上本地的hadoop临时文件夹</description>
+        </property>
+        <property>
+                <name>io.file.buffer.size</name>
+                <value>131072</value>
+        <description>Size of read/write buffer used in SequenceFiles</description>
+</property>
+
+
+
+
+
+
+HDFS_DATANODE_USER=root
+HADOOP_SECURE_DN_USER=hdfs
+HDFS_NAMENODE_USER=root
+HDFS_SECONDARYNAMENODE_USER=root
+
+
+export HADOOP_OPTS="-Djava.library.path=${HADOOP_HOME}/lib/native" 
+
+-----------------------------------------
+
+
+GRANT select,insert,update,delete,create,drop ON hive.*  TO hive@192.168.149.55 IDENTIFIED BY '131415';
+
+
+
+
+
+
+
